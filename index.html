@@ -3,33 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VaultStream — Fast & Affordable Cloud Storage & Data Transfer</title>
+  <title>VaultStream — Private & Affordable Crypto Cloud Storage</title>
   <script src="https://tailwindcss.com"></script>
+  <script src="https://jsdelivr.net"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased">
 
   <!-- Navbar -->
-  <nav class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50">
+  <nav class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="text-2xl font-bold text-indigo-400">VaultStream<span class="text-white">.cloud</span></div>
-      <div class="space-x-6 text-sm">
-        <a href="#features" class="hover:text-indigo-400">Features</a>
+      <div id="nav-guest" class="flex items-center gap-4 text-sm">
         <a href="#pricing" class="hover:text-indigo-400">Pricing</a>
         <a href="#terms" class="hover:text-indigo-400">Terms</a>
         <button onclick="openAuth('login')" class="px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-800">Log In</button>
         <button onclick="openAuth('signup')" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium">Start Free (2 GB)</button>
       </div>
+      <div id="nav-user" class="hidden flex items-center gap-4 text-sm">
+        <span id="user-email-display" class="text-slate-400"></span>
+        <button onclick="logoutUser()" class="px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-800">Log Out</button>
+      </div>
     </div>
   </nav>
 
+  <!-- Logged-in User Dashboard -->
+  <section id="user-dashboard" class="hidden max-w-5xl mx-auto px-4 py-12">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
+        <div>
+          <h2 class="text-2xl font-bold">Your Cloud Storage Dashboard</h2>
+          <p class="text-sm text-slate-400 mt-1">Current Plan: <span class="text-indigo-400 font-semibold">Free Tier (2 GB)</span></p>
+        </div>
+        <a href="#pricing" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-bold">Upgrade Storage</a>
+      </div>
+
+      <!-- Quota Bar -->
+      <div class="mt-6">
+        <div class="flex justify-between text-xs text-slate-400 mb-2">
+          <span>Storage Used: 0.00 GB / 2.00 GB</span>
+          <span>0%</span>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-3">
+          <div class="bg-indigo-500 h-3 rounded-full" style="width: 2%"></div>
+        </div>
+      </div>
+
+      <!-- Upload Area -->
+      <div class="mt-8 border-2 border-dashed border-slate-700 rounded-xl p-10 text-center hover:border-indigo-500 transition">
+        <p class="text-lg font-medium">Drag & drop files here to upload</p>
+        <p class="text-xs text-slate-400 mt-1">Max file size: 100 MB (Free Tier). Executable files (.exe, .bat, .sh) are blocked.</p>
+        <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)" />
+        <button onclick="document.getElementById('file-input').click()" class="mt-4 px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-semibold">Select File from Device</button>
+      </div>
+    </div>
+  </section>
+
   <!-- Hero Section -->
-  <header class="max-w-5xl mx-auto px-4 py-20 text-center">
-    <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full">High-Speed S3 Cloud Storage & API</span>
+  <header id="hero-section" class="max-w-5xl mx-auto px-4 py-20 text-center">
+    <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full">Privacy-First Cloud Storage • No Credit Card Required</span>
     <h1 class="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight">
-      Store, Share & Transfer Files at <span class="text-indigo-400">Realistic Prices</span>
+      Private Cloud Storage & File Transfer at <span class="text-indigo-400">Realistic Prices</span>
     </h1>
     <p class="mt-6 text-lg text-slate-400 max-w-2xl mx-auto">
-      Start with 2 GB completely free. Upgrade anytime to high-capacity cloud storage with direct download links and developer API access—without overpriced enterprise fees.
+      Start with 2 GB completely free. Upgrade anytime with instant Crypto payments (BTC, USDT, LTC) for private, high-speed storage and developer API access.
     </p>
     <div class="mt-8 flex justify-center gap-4">
       <button onclick="openAuth('signup')" class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-lg shadow-lg shadow-indigo-600/20">
@@ -44,17 +80,11 @@
   <!-- Pricing Section -->
   <section id="pricing" class="max-w-7xl mx-auto px-4 py-16">
     <div class="text-center">
-      <h2 class="text-3xl font-bold">Simple, Transparent Storage Plans</h2>
-      <p class="text-slate-400 mt-2">Zero hidden bandwidth fees. Switch to yearly and get 2 months free.</p>
-      
-      <!-- Billing Toggle -->
-      <div class="mt-6 inline-flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800">
-        <button id="btn-monthly" onclick="setBilling('monthly')" class="px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium text-sm">Monthly</button>
-        <button id="btn-yearly" onclick="setBilling('yearly')" class="px-5 py-2 rounded-lg text-slate-400 font-medium text-sm">Yearly (2 Months Free)</button>
-      </div>
+      <h2 class="text-3xl font-bold">Competitive Storage Plans</h2>
+      <p class="text-slate-400 mt-2">Pay anonymously with Crypto (BTC, USDT, LTC, ETH) — Instant activation, no credit card needed.</p>
     </div>
 
-    <div id="plans-grid" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    <div id="plans-grid" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </section>
 
   <!-- Legal / Terms Section -->
@@ -62,11 +92,11 @@
     <h3 class="text-xl font-bold text-white">Terms of Service & Acceptable Use Policy</h3>
     <p><strong>1. Prohibited Content:</strong> Users are strictly prohibited from uploading copyrighted material without authorization, malware, executable files (.exe, .bat, .sh), or illegal content. Accounts violating this policy will be terminated immediately.</p>
     <p><strong>2. Data Backup Disclaimer:</strong> VaultStream provides high-availability cloud storage and file transfer. Users remain solely responsible for maintaining independent local backups of critical files.</p>
-    <p><strong>3. Privacy:</strong> We collect only your email address for authentication and billing management. Files remain private unless you explicitly generate a shareable link.</p>
+    <p><strong>3. Privacy:</strong> We collect only your email address for authentication and order tracking. No personal identity documents or credit cards are required.</p>
   </section>
 
   <!-- Auth Modal -->
-  <div id="auth-modal" class="hidden fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50">
+  <div id="auth-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6">
       <div class="flex justify-between items-center mb-4">
         <h3 id="modal-title" class="text-xl font-bold">Create Free Account</h3>
@@ -75,17 +105,18 @@
       <form onsubmit="handleAuth(event)" class="space-y-4">
         <div>
           <label class="block text-xs text-slate-400 mb-1">Email Address</label>
-          <input type="email" required placeholder="you@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-indigo-500 outline-none" />
+          <input id="auth-email" type="email" required placeholder="you@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-indigo-500 outline-none" />
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Password</label>
-          <input type="password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-indigo-500 outline-none" />
+          <label class="block text-xs text-slate-400 mb-1">Password (min 6 characters)</label>
+          <input id="auth-password" type="password" required minlength="6" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 focus:border-indigo-500 outline-none" />
         </div>
         <div id="terms-box" class="flex items-start gap-2">
-          <input type="checkbox" id="agree-terms" required class="mt-1" />
+          <input type="checkbox" id="agree-terms" class="mt-1" />
           <label for="agree-terms" class="text-xs text-slate-400">I agree to the Terms of Service and Acceptable Use Policy.</label>
         </div>
-        <button type="submit" class="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-bold">Continue</button>
+        <p id="auth-message" class="text-xs text-amber-400 hidden"></p>
+        <button type="submit" id="auth-submit-btn" class="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-bold">Continue</button>
       </form>
     </div>
   </div>
@@ -95,64 +126,31 @@
   </footer>
 
   <script>
-    let billing = 'monthly';
+    // === YOUR SUPABASE CONNECTION ===
+    const SUPABASE_URL = 'https://supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_wivTYuP3ZSKrHEMe2b9ghQ_HOKMaaP5';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // === YOUR LIVE NOWPAYMENTS LINKS ===
+    const PAYMENT_LINKS = {
+      basic_50gb: 'https://nowpayments.io',
+      popular_100gb: 'https://nowpayments.io',
+      creator_500gb: 'https://nowpayments.io',
+      pro_1000gb: 'https://nowpayments.io',
+      enterprise_2000gb: 'https://nowpayments.io'
+    };
+
+    let authMode = 'signup';
+
     const plans = [
-      { name: 'Free', storage: '2 GB', m: '$0', y: '$0', badge: '', features: ['2 GB Cloud Storage', 'Max 100 MB per file', '10 GB Monthly Transfer', 'Shareable Links'] },
-      { name: 'Basic', storage: '50 GB', m: '$1.49', y: '$14.90', badge: '', features: ['50 GB Cloud Storage', 'Max 2 GB per file', '200 GB Monthly Transfer', 'Password Protected Links'] },
-      { name: 'Popular', storage: '100 GB', m: '$2.49', y: '$24.90', badge: 'Most Popular ⭐', features: ['100 GB Cloud Storage', 'Max 5 GB per file', '500 GB Monthly Transfer', 'Priority Download Speed'] },
-      { name: 'Creator', storage: '500 GB', m: '$6.99', y: '$69.90', badge: 'Customer Favorite 🔥', features: ['500 GB Cloud Storage', 'Max 15 GB per file', '2 TB Monthly Transfer', 'REST API Access'] },
-      { name: 'Pro 1TB', storage: '1,000 GB', m: '$11.99', y: '$119.90', badge: 'Best Value 💎', highlight: true, features: ['1,000 GB (1 TB) Storage', 'Unlimited File Size', '5 TB Monthly Transfer', 'Full S3 & REST API'] },
-      { name: 'Pro Plus', storage: '1,500 GB', m: '$16.99', y: '$169.90', badge: '', features: ['1,500 GB Cloud Storage', 'Unlimited File Size', '8 TB Monthly Transfer', 'Priority API & Support'] },
-      { name: 'Enterprise', storage: '2,000 GB', m: '$21.99', y: '$219.90', badge: '', features: ['2,000 GB (2 TB) Storage', 'Unlimited File Size', '12 TB Monthly Transfer', 'Dedicated API Keys'] }
+      { id: 'free', name: 'Free', storage: '2 GB', price: '$0', badge: '', link: '', features: ['2 GB Cloud Storage', 'Max 100 MB per file', '10 GB Monthly Transfer', 'Shareable Download Links'] },
+      { id: 'basic', name: 'Basic', storage: '50 GB', price: '$1.49', badge: '', link: PAYMENT_LINKS.basic_50gb, features: ['50 GB Cloud Storage', 'Max 2 GB per file', '200 GB Monthly Transfer', 'Password Protected Links'] },
+      { id: 'popular', name: 'Popular', storage: '100 GB', price: '$2.49', badge: 'Most Popular ⭐', link: PAYMENT_LINKS.popular_100gb, features: ['100 GB Cloud Storage', 'Max 5 GB per file', '500 GB Monthly Transfer', 'Priority Download Speed'] },
+      { id: 'creator', name: 'Creator', storage: '500 GB', price: '$5.99', badge: 'Customer Favorite 🔥', link: PAYMENT_LINKS.creator_500gb, features: ['500 GB Cloud Storage', 'Max 15 GB per file', '2 TB Monthly Transfer', 'REST API Access for Websites'] },
+      { id: 'pro', name: 'Pro 1TB', storage: '1,000 GB', price: '$8.99', badge: 'Best Value 💎', highlight: true, link: PAYMENT_LINKS.pro_1000gb, features: ['1,000 GB (1 TB) Storage', 'Unlimited File Size', '5 TB Monthly Transfer', 'Full S3 & REST API Access'] },
+      { id: 'enterprise', name: 'Enterprise 2TB', storage: '2,000 GB', price: '$16.99', badge: '', link: PAYMENT_LINKS.enterprise_2000gb, features: ['2,000 GB (2 TB) Storage', 'Unlimited File Size', '12 TB Monthly Transfer', 'Dedicated API Keys & Support'] }
     ];
 
     function renderPlans() {
       const grid = document.getElementById('plans-grid');
       grid.innerHTML = plans.map(p => `
-        <div class="rounded-2xl p-6 flex flex-col justify-between bg-slate-900 border ${p.highlight ? 'border-indigo-500 ring-2 ring-indigo-500/30' : 'border-slate-800'}">
-          <div>
-            ${p.badge ? `<span class="inline-block mb-3 px-2.5 py-1 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-300">${p.badge}</span>` : '<div class="h-7"></div>'}
-            <h3 class="text-xl font-bold">${p.name}</h3>
-            <div class="text-3xl font-extrabold text-indigo-400 mt-1">${p.storage}</div>
-            <div class="mt-4">
-              <span class="text-3xl font-bold">${billing === 'monthly' ? p.m : p.y}</span>
-              <span class="text-slate-400 text-sm">/${billing === 'monthly' ? 'mo' : 'yr'}</span>
-            </div>
-            <ul class="mt-6 space-y-2.5 text-sm text-slate-300">
-              ${p.features.map(f => `<li>✓ ${f}</li>`).join('')}
-            </ul>
-          </div>
-          <button onclick="openAuth('signup')" class="mt-8 w-full py-2.5 rounded-lg font-semibold ${p.highlight ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">
-            ${p.m === '$0' ? 'Start Free' : 'Select Plan'}
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function setBilling(mode) {
-      billing = mode;
-      document.getElementById('btn-monthly').className = mode === 'monthly' ? 'px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium text-sm' : 'px-5 py-2 rounded-lg text-slate-400 font-medium text-sm';
-      document.getElementById('btn-yearly').className = mode === 'yearly' ? 'px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium text-sm' : 'px-5 py-2 rounded-lg text-slate-400 font-medium text-sm';
-      renderPlans();
-    }
-
-    function openAuth(type) {
-      document.getElementById('auth-modal').classList.remove('hidden');
-      document.getElementById('modal-title').innerText = type === 'login' ? 'Log In to VaultStream' : 'Create Free 2 GB Account';
-      document.getElementById('terms-box').style.display = type === 'login' ? 'none' : 'flex';
-    }
-
-    function closeAuth() {
-      document.getElementById('auth-modal').classList.add('hidden');
-    }
-
-    function handleAuth(e) {
-      e.preventDefault();
-      alert('Account created! Connecting to storage backend...');
-      closeAuth();
-    }
-
-    renderPlans();
-  </script>
-</body>
-</html>
