@@ -1302,13 +1302,21 @@
     </dialog>
 
     <script type="module">
-      import { createClient } from "@supabase/supabase-js";
-
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
-      const supabase = supabaseUrl && supabaseAnonKey
-        ? createClient(supabaseUrl, supabaseAnonKey)
-        : null;
+      const supabaseUrl = "https://supabase.co";
+      const supabaseAnonKey = "sb_publishable_wivTYuP3ZSKrHEMe2b9ghQ_HOKMaaP5";
+      let supabase = null;
+      let supabaseLoadError = "";
+      const supabaseReady = import("https://esm.sh/@supabase/supabase-js@2.109.0")
+        .then(({ createClient }) => {
+          supabase = createClient(supabaseUrl, supabaseAnonKey);
+          renderAuth();
+          return supabase;
+        })
+        .catch((error) => {
+          supabaseLoadError = error.message || String(error);
+          renderAuth();
+          return null;
+        });
 
       const translations = {
         en: {
@@ -1316,8 +1324,8 @@
           description: "Quick information about cloud file storage from VaultStream.",
           brandLabel: "VaultStream — home",
           languageLabel: "Language",
-          login: "Log in",
-          signup: "Sign up",
+          login: "Log In",
+          signup: "Start Free",
           welcome: "Welcome to ",
           intro: "Everything you need to know about storing files in the cloud—quick answers, no waiting.",
           qaHeading: "How can we help?",
@@ -1339,7 +1347,7 @@
           dropzoneTitle: "Drop files here or click to browse",
           dropzoneNote: "Private uploads · up to 2 GB per file",
           uploadAccountNote: "Files are stored privately in your account.",
-          signupFree: "Sign up free",
+          signupFree: "Start Free",
           selectedFilesLabel: "Selected files",
           selectedFiles: "Selected files: {count}. Sign up or log in to upload.",
           uploadStorageUnavailable: "File storage isn't configured. Ask the site administrator to apply the storage setup.",
@@ -1362,7 +1370,7 @@
           fileTooLarge: "{name} exceeds the 2 GB per-file limit.",
           dashboardUpload: "Upload files",
           filesTitle: "Your files",
-          payWithCrypto: "Pay with crypto",
+          payWithCrypto: "Pay with Crypto",
           paymentLinkUnavailable: "Payment link unavailable; ask the site administrator to check its NOWPayments URL.",
           questionLabel: "Type your question",
           placeholder: "Type your question...",
@@ -1430,8 +1438,10 @@
           authSignupTitle: "Create a VaultStream account",
           authFreeStorage: "New sign-ups include 2 GB of free storage. Upgrade to a paid plan only if you need more.",
           authNotice: "Supabase isn't configured for this deployment. Sign-in and profile storage are unavailable until it is configured.",
+          authLoadingNotice: "Connecting securely to Supabase…",
           authConnectedNotice: "Your account is managed securely through Supabase.",
           authMissingConfig: "Account access is unavailable because Supabase isn't configured.",
+          authSdkLoadError: "Unable to load account services: ",
           authEmailConfirmation: "Check your email to confirm your account, then log in.",
           authErrorPrefix: "Authentication failed: ",
           selectedPlan: "Interested in paid plan (not active until checkout)",
@@ -1439,7 +1449,7 @@
           password: "Password",
           terms: "I agree to the Terms of Service.",
           authContinue: "Continue",
-          authCreate: "Create account",
+          authCreate: "Create Free Account",
           authClose: "Close",
           dashboardTitle: "Your account",
           subscriptionsTitle: "Your subscriptions",
@@ -1600,8 +1610,10 @@
           authSignupTitle: "יצירת חשבון VaultStream",
           authFreeStorage: "בהרשמה מקבלים 2 GB אחסון בחינם. אפשר לשדרג למסלול בתשלום אם צריך יותר.",
           authNotice: "Supabase אינו מוגדר לפריסה הזו. התחברות ושמירת פרופיל לא יהיו זמינות עד להגדרתו.",
+          authLoadingNotice: "מתחבר לשירות Supabase בצורה מאובטחת…",
           authConnectedNotice: "החשבון שלכם מנוהל בצורה מאובטחת דרך Supabase.",
           authMissingConfig: "הגישה לחשבון אינה זמינה כי Supabase אינו מוגדר.",
+          authSdkLoadError: "לא ניתן לטעון את שירותי החשבון: ",
           authEmailConfirmation: "בדקו את הדוא״ל כדי לאשר את החשבון, ואז התחברו.",
           authErrorPrefix: "ההתחברות נכשלה: ",
           selectedPlan: "מסלול בתשלום לעניין בלבד (טרם הופעל)",
@@ -1662,11 +1674,11 @@
       ];
 
       const nowPaymentsLinks = {
-        basic: import.meta.env.VITE_NOWPAYMENTS_BASIC_URL || "",
-        popular: import.meta.env.VITE_NOWPAYMENTS_POPULAR_URL || "",
-        creator: import.meta.env.VITE_NOWPAYMENTS_CREATOR_URL || "",
-        pro_1tb: import.meta.env.VITE_NOWPAYMENTS_PRO_1TB_URL || "",
-        enterprise: import.meta.env.VITE_NOWPAYMENTS_ENTERPRISE_URL || "",
+        basic: "https://nowpayments.io",
+        popular: "https://nowpayments.io",
+        creator: "https://nowpayments.io",
+        pro_1tb: "https://nowpayments.io",
+        enterprise: "https://nowpayments.io",
       };
 
       const keywords = {
@@ -2142,9 +2154,10 @@
       }
 
       async function restoreSession() {
-        if (!supabase) return;
+        const client = await supabaseReady;
+        if (!client) return;
         try {
-          const { data, error } = await supabase.auth.getSession();
+          const { data, error } = await client.auth.getSession();
           if (error) throw error;
           if (data.session?.user) await loadDashboard(data.session.user);
         } catch (error) {
@@ -2166,7 +2179,9 @@
         document.getElementById("auth-free-storage").hidden = !isSignup;
         document.getElementById("auth-notice").textContent = supabase
           ? content.authConnectedNotice
-          : content.authNotice;
+          : supabaseLoadError
+            ? `${content.authSdkLoadError}${supabaseLoadError}`
+            : content.authLoadingNotice;
         document.getElementById("auth-selected-plan").textContent = isSignup
           ? `${content.selectedPlan}: ${selectedPlan.name}`
           : "";
@@ -2180,10 +2195,10 @@
         document.getElementById("auth-submit").textContent = isSignup
           ? content.authCreate
           : content.authContinue;
-        document.getElementById("auth-email").disabled = !supabase;
-        document.getElementById("auth-password").disabled = !supabase;
-        termsCheckbox.disabled = !supabase;
-        document.getElementById("auth-submit").disabled = !supabase;
+        document.getElementById("auth-email").disabled = false;
+        document.getElementById("auth-password").disabled = false;
+        termsCheckbox.disabled = false;
+        document.getElementById("auth-submit").disabled = false;
         document.getElementById("auth-close").setAttribute("aria-label", content.authClose);
         document.getElementById("auth-status").textContent =
           authStatusText || (authStatusKey ? content[authStatusKey] : "");
@@ -2342,19 +2357,22 @@
         event.preventDefault();
         authStatusKey = "";
         authStatusText = "";
-        if (!supabase) {
-          authStatusKey = "authMissingConfig";
-          renderAuth();
-          return;
-        }
-
         const submitButton = document.getElementById("auth-submit");
+        if (submitButton.disabled) return;
         submitButton.disabled = true;
         try {
+          const client = await supabaseReady;
+          if (!client) {
+            authStatusText = supabaseLoadError
+              ? `${translations[language].authSdkLoadError}${supabaseLoadError}`
+              : translations[language].authMissingConfig;
+            return;
+          }
+
           const email = document.getElementById("auth-email").value.trim();
           const password = document.getElementById("auth-password").value;
           if (authMode === "signup") {
-            const { data, error } = await supabase.auth.signUp({
+            const { data, error } = await client.auth.signUp({
               email,
               password,
               options: { data: { accepted_terms_at: new Date().toISOString() } },
@@ -2369,7 +2387,7 @@
             }
             authStatusKey = "authEmailConfirmation";
           } else {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            const { data, error } = await client.auth.signInWithPassword({ email, password });
             if (error) throw error;
             const filesToUpload = pendingUploadFiles;
             authDialog.close();
@@ -2380,15 +2398,15 @@
         } catch (error) {
           authStatusText = `${translations[language].authErrorPrefix}${error.message || String(error)}`;
         } finally {
-          submitButton.disabled = !supabase;
+          submitButton.disabled = false;
+          if (authDialog.open) renderAuth();
         }
-        renderAuth();
       });
 
       function openAuth(mode, planId = "basic") {
         authMode = mode;
         selectedPlanId = planId;
-        authStatusKey = supabase ? "" : "authMissingConfig";
+        authStatusKey = "";
         authStatusText = "";
         authForm.reset();
         renderAuth();

@@ -7,15 +7,10 @@ through a server-side database function using the service-role key.
 
 ## Configure the app
 
-Set these Vite variables in an ignored local `.env.local` file or in the
-deployment environment:
-
-```text
-VITE_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
-VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY
-```
-
-Never put `SUPABASE_SERVICE_ROLE_KEY` in a `VITE_` variable or browser code.
+The static page does not read build-time environment variables. Its public
+Supabase URL and publishable key are configured directly in `index.html`, so
+the Cloudflare Pages deployment does not require a Vite build step. The service
+role key must never be placed in browser code.
 
 Apply the schema:
 
@@ -29,23 +24,14 @@ The file-storage migration also creates the private `user-files` bucket and
 restricts listing, uploads, and deletes to the signed-in user's UUID prefix.
 The page caps individual files at 2 GB and creates seven-day signed share links.
 
-## Configure NOWPayments links
+## NOWPayments links
 
-The pricing cards display a crypto checkout link only when its matching Vite
-variable is set to an HTTPS NOWPayments URL. Add the five hosted links from the
-NOWPayments dashboard to the deployment environment (or a local `.env.local`):
-
-```text
-VITE_NOWPAYMENTS_BASIC_URL=
-VITE_NOWPAYMENTS_POPULAR_URL=
-VITE_NOWPAYMENTS_CREATOR_URL=
-VITE_NOWPAYMENTS_PRO_1TB_URL=
-VITE_NOWPAYMENTS_ENTERPRISE_URL=
-```
-
-These are public checkout URLs, not API credentials. Payment confirmation and
-subscription updates still require a trusted server-side payment integration;
-opening a hosted payment link alone does not activate a subscription.
+The five pricing cards currently link to the public `https://nowpayments.io`
+site. Replace the corresponding URLs in `index.html` with the plan-specific
+hosted checkout URLs from the NOWPayments dashboard when available. Payment
+confirmation and subscription updates still require a trusted server-side
+payment integration; opening a hosted payment link alone does not activate a
+subscription.
 
 ## Configure subscription sync
 
@@ -76,8 +62,8 @@ the authenticated Supabase user's UUID in Lemon Squeezy custom data as
 events are matched by the provider subscription ID. Older out-of-order events
 are ignored.
 
-The current pricing page is informational and does not start checkout. Until a
-checkout flow is configured to provide that custom data, paid subscriptions
-must originate from a separate trusted checkout integration. The dashboard
-shows only records actually present in Supabase; it does not invent paid plan
-dates.
+NOWPayments links do not currently pass authenticated user data to the existing
+Lemon Squeezy webhook. Paid subscriptions must originate from a trusted
+integration that associates checkout with the authenticated Supabase user. The
+dashboard shows only records actually present in Supabase; it does not invent
+paid plan dates.
