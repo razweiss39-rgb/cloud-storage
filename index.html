@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VaultStream — Fast & Private Crypto Cloud Storage</title>
-  <script src="https://jsdelivr.net"></script>
   <style>
     :root {
       --bg: #050814;
@@ -30,8 +29,7 @@
     /* Navbar */
     nav {
       border-bottom: 1px solid var(--card-border);
-      background: rgba(5, 8, 20, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(5, 8, 20, 0.9);
       position: sticky; top: 0; z-index: 100;
     }
     .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 68px; }
@@ -54,8 +52,8 @@
 
     /* Animated Center Logo */
     @keyframes floatLogo {
-      0%, 100% { transform: translateY(0px); filter: drop-shadow(0 0 18px rgba(99, 102, 241, 0.55)); }
-      50% { transform: translateY(-10px); filter: drop-shadow(0 12px 28px rgba(139, 92, 246, 0.75)); }
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
     @keyframes pulseRing {
       0% { transform: scale(0.95); opacity: 0.7; }
@@ -83,7 +81,7 @@
     .qa-box {
       max-width: 720px; margin: 36px auto 0; background: var(--card);
       border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 20px;
-      padding: 24px; text-align: left; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      padding: 24px; text-align: left;
     }
     .qa-header { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #a5b4fc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .qa-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
@@ -99,7 +97,7 @@
     .qa-answer {
       background: rgba(5, 8, 20, 0.7); border-left: 3px solid var(--primary);
       padding: 16px; border-radius: 10px; font-size: 0.94rem; color: #cbd5e1;
-      min-height: 72px; transition: opacity 0.25s;
+      min-height: 72px;
     }
 
     /* Hero */
@@ -128,9 +126,8 @@
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; }
     .card {
       background: var(--card); border: 1px solid var(--card-border);
-      border-radius: 18px; padding: 28px; transition: 0.25s;
+      border-radius: 18px; padding: 28px;
     }
-    .card:hover { border-color: rgba(99, 102, 241, 0.4); }
     .card h3 { font-size: 1.15rem; margin-bottom: 10px; }
     .card p { color: var(--muted); font-size: 0.92rem; }
 
@@ -172,7 +169,6 @@
       border: 2px dashed rgba(99,102,241,0.4); border-radius: 16px; padding: 48px 20px;
       text-align: center; margin-top: 24px; cursor: pointer; background: rgba(99,102,241,0.03);
     }
-    .dropzone:hover { border-color: var(--primary); }
 
     /* Legal & Footer */
     .legal { border-top: 1px solid var(--card-border); padding: 48px 0; font-size: 0.85rem; color: var(--muted); }
@@ -200,3 +196,13 @@
 
   <!-- Navbar -->
   <nav>
+    <div class="container nav-inner">
+      <a href="#" class="logo">Vault<span>Stream</span></a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#compare">Compare</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#terms">Terms</a>
+      </div>
+      <div id="nav-guest" class="nav-actions">
+        <button onclick="openAuth('login')" class="btn btn-outline">Log In</button>
