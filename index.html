@@ -248,6 +248,7 @@
 
       .dropzone:focus-visible,
       .hero-signup:focus-visible,
+      .hero-plans:focus-visible,
       .file-action:focus-visible,
       .payment-link:focus-visible {
         outline: 2px solid #c7d2fe;
@@ -315,6 +316,29 @@
         background: #4338ca;
       }
 
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+
+      .hero-plans {
+        min-height: 40px;
+        padding: 8px 13px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #e2e8f0;
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .hero-plans:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
       .qa-card {
         margin-top: 32px;
         padding: 24px;
@@ -365,7 +389,8 @@
       }
 
       .question-chip:hover,
-      .question-chip:focus-visible {
+      .question-chip:focus-visible,
+      .question-chip[aria-pressed="true"] {
         border-color: var(--primary);
         background: rgba(99, 102, 241, 0.2);
       }
@@ -616,6 +641,14 @@
         color: white;
       }
 
+      .plan-payment-status {
+        min-height: 1.4em;
+        margin: 8px 0 0;
+        color: #fde68a;
+        font-size: 0.76rem;
+        line-height: 1.5;
+      }
+
       .featured .plan-button {
         background: #4f46e5;
       }
@@ -625,6 +658,46 @@
         color: var(--muted);
         font-size: 0.82rem;
         text-align: center;
+      }
+
+      .pricing-table-wrap {
+        margin-top: 24px;
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .pricing-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: start;
+      }
+
+      .pricing-table th,
+      .pricing-table td {
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      .pricing-table th {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .pricing-table td {
+        font-size: 0.88rem;
+      }
+
+      .pricing-table tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .pricing-table .featured-row td {
+        color: #c7d2fe;
+        font-weight: 700;
       }
 
       .auth-dialog {
@@ -1038,7 +1111,11 @@
         }
 
         .hero-signup {
-          width: 100%;
+          flex: 1 1 100%;
+        }
+
+        .hero-plans {
+          flex: 1 1 100%;
         }
 
         .file-row {
@@ -1160,7 +1237,10 @@
           <ul class="upload-preview" id="upload-preview" aria-label="Selected files"></ul>
           <div class="upload-actions">
             <small id="upload-account-note">Files are stored privately in your account.</small>
-            <button class="hero-signup" id="hero-signup-button" type="button">Sign up free</button>
+            <div class="hero-cta">
+              <button class="hero-signup" id="hero-signup-button" type="button">Create Free 2 GB Account</button>
+              <button class="hero-plans" id="hero-plans-button" type="button">View Storage Plans</button>
+            </div>
           </div>
         </section>
 
@@ -1175,9 +1255,9 @@
             <span id="qa-heading-text">How can we help?</span>
           </h2>
           <div class="questions" id="questions" aria-label="Frequently asked questions">
-            <button class="question-chip" type="button" data-answer="service">What is VaultStream?</button>
-            <button class="question-chip" type="button" data-answer="upload">Can I upload files?</button>
-            <button class="question-chip" type="button" data-answer="security">How are files protected?</button>
+            <button class="question-chip" type="button" data-answer="service" aria-pressed="false">What is VaultStream?</button>
+            <button class="question-chip" type="button" data-answer="upload" aria-pressed="false">Can I upload files?</button>
+            <button class="question-chip" type="button" data-answer="security" aria-pressed="false">How are files protected?</button>
           </div>
           <div class="answer" id="answer" role="status" aria-live="polite">
             Choose a common question or type your own.
@@ -1225,6 +1305,19 @@
           <button class="billing-button" id="yearly-button" type="button" aria-pressed="false">Yearly · 2 months free</button>
         </div>
         <div class="plans-grid" id="plans-grid" aria-live="polite"></div>
+        <div class="pricing-table-wrap">
+          <table class="pricing-table" aria-labelledby="comparison-title">
+            <caption class="sr-only" id="comparison-title">Plan price comparison</caption>
+            <thead>
+              <tr>
+                <th scope="col" id="comparison-plan-heading">Plan</th>
+                <th scope="col" id="comparison-storage-heading">Storage</th>
+                <th scope="col" id="comparison-price-heading">Monthly price</th>
+              </tr>
+            </thead>
+            <tbody id="pricing-comparison-body"></tbody>
+          </table>
+        </div>
         <p class="plan-note" id="plan-note">Plan details are informational. Sign in to manage your files and subscription.</p>
       </section>
     </main>
@@ -1301,22 +1394,12 @@
       </div>
     </dialog>
 
-    <script type="module">
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
       const supabaseUrl = "https://supabase.co";
       const supabaseAnonKey = "sb_publishable_wivTYuP3ZSKrHEMe2b9ghQ_HOKMaaP5";
       let supabase = null;
       let supabaseLoadError = "";
-      const supabaseReady = import("https://esm.sh/@supabase/supabase-js@2.109.0")
-        .then(({ createClient }) => {
-          supabase = createClient(supabaseUrl, supabaseAnonKey);
-          renderAuth();
-          return supabase;
-        })
-        .catch((error) => {
-          supabaseLoadError = error.message || String(error);
-          renderAuth();
-          return null;
-        });
 
       const translations = {
         en: {
@@ -1348,6 +1431,9 @@
           dropzoneNote: "Private uploads · up to 2 GB per file",
           uploadAccountNote: "Files are stored privately in your account.",
           signupFree: "Start Free",
+          heroSignup: "Create Free 2 GB Account",
+          viewPlans: "View Storage Plans",
+          pricingStartFree: "Start Free",
           selectedFilesLabel: "Selected files",
           selectedFiles: "Selected files: {count}. Sign up or log in to upload.",
           uploadStorageUnavailable: "File storage isn't configured. Ask the site administrator to apply the storage setup.",
@@ -1380,58 +1466,70 @@
           whyIntro: "Straightforward storage options, clear pricing, and a privacy-conscious experience.",
           benefits: [
             ["Privacy-conscious by design", "Questions you type here stay in your browser; this page doesn't send them to a server."],
-            ["Plans that scale with you", "Choose from five storage tiers, from 50 GB to 2 TB."],
+            ["Plans that scale with you", "Choose from six storage tiers, from 2 GB to 2 TB."],
             ["Clear, upfront pricing", "Compare monthly and yearly prices before choosing a plan."],
           ],
           pricingTitle: "Simple cloud storage plans",
           pricingIntro: "Pick the amount of storage that fits your needs. Annual billing includes two months free.",
+          comparisonTitle: "Plan price comparison",
+          comparisonPlan: "Plan",
+          comparisonStorage: "Storage",
+          comparisonPrice: "Monthly price",
           billingLabel: "Billing period",
           monthly: "Monthly",
           yearly: "Yearly · 2 months free",
           perMonth: "/mo",
           perYear: "/yr",
-          planNote: "Manage your files after signing in. Crypto checkout links appear when configured.",
+          planNote: "Manage your files after signing in. Payment links open NOWPayments.",
           choosePlan: "Choose plan",
           plans: [
+            {
+              id: "free",
+              name: "Starter Free",
+              storage: "2 GB",
+              badge: "Free forever",
+              description: "Get started with private cloud storage at no cost.",
+              features: ["2 GB Encrypted Storage", "Max 100 MB per file", "10 GB Monthly Transfer", "Shareable Download Links"],
+            },
             {
               id: "basic",
               name: "Basic",
               storage: "50 GB",
               badge: "",
               description: "Essential space for personal backups and documents.",
-              features: ["50 GB cloud storage", "High-speed transfers", "Custom link expiration", "Priority email support"],
+              features: ["50 GB Encrypted Storage", "Max 2 GB per file", "200 GB Monthly Transfer", "Password Protected Links"],
             },
             {
               id: "popular",
               name: "Popular",
               storage: "100 GB",
-              badge: "Most popular",
+              badge: "Most Popular ⭐",
               description: "Great value for everyday creators and freelancers.",
-              features: ["100 GB cloud storage", "Unlimited share links", "Batch uploads", "Priority transfer bandwidth"],
+              features: ["100 GB Encrypted Storage", "Max 5 GB per file", "500 GB Monthly Transfer", "Priority Download Speed"],
             },
             {
               id: "creator",
               name: "Creator",
               storage: "500 GB",
-              badge: "API enabled",
+              badge: "Customer Favorite 🔥",
               description: "Built for media teams, automation, and developer workflows.",
-              features: ["500 GB cloud storage", "API access", "Programmatic uploads", "High-throughput transfers"],
+              features: ["500 GB Encrypted Storage", "Max 15 GB per file", "2 TB Monthly Transfer", "REST API Access for Websites"],
             },
             {
               id: "pro_1tb",
-              name: "Pro 1 TB",
+              name: "Pro 1TB",
               storage: "1,000 GB",
-              badge: "Pro + API",
+              badge: "Best Value 💎",
               description: "A full terabyte with API access for larger workloads.",
-              features: ["1 TB cloud storage", "Multiple API tokens", "Token rotation", "Dedicated transfer routing"],
+              features: ["1,000 GB (1 TB) Storage", "Unlimited File Size", "5 TB Monthly Transfer", "Full S3 & REST API Access"],
             },
             {
               id: "enterprise",
-              name: "Enterprise",
+              name: "Enterprise 2TB",
               storage: "2,000 GB",
               badge: "Max capacity",
               description: "2 TB storage and transfer capacity for organizations.",
-              features: ["2 TB cloud storage", "API access", "Maximum concurrent transfers", "SLA and dedicated onboarding"],
+              features: ["2,000 GB (2 TB) Storage", "Unlimited File Size", "12 TB Monthly Transfer", "Dedicated API Keys & Support"],
             },
           ],
           authLoginTitle: "Log in to VaultStream",
@@ -1520,6 +1618,9 @@
           dropzoneNote: "העלאה פרטית · עד 2 GB לקובץ",
           uploadAccountNote: "הקבצים נשמרים באופן פרטי בחשבון שלכם.",
           signupFree: "הרשמה בחינם",
+          heroSignup: "יצירת חשבון חינמי בנפח 2 GB",
+          viewPlans: "צפייה במסלולי האחסון",
+          pricingStartFree: "הרשמה בחינם",
           selectedFilesLabel: "קבצים שנבחרו",
           selectedFiles: "קבצים שנבחרו: {count}. הירשמו או התחברו כדי להעלות.",
           uploadStorageUnavailable: "אחסון הקבצים אינו מוגדר. פנו למנהל האתר כדי להגדיר אותו.",
@@ -1552,58 +1653,70 @@
           whyIntro: "מסלולי אחסון ברורים, מחירים שקופים וחוויה שמתחשבת בפרטיות.",
           benefits: [
             ["פרטיות כברירת מחדל", "השאלות שתכתבו כאן נשארות בדפדפן — הדף אינו שולח אותן לשרת."],
-            ["מסלולים שגדלים יחד אתכם", "בחרו בין חמישה מסלולי אחסון, מ־50 GB ועד 2 TB."],
+            ["מסלולים שגדלים יחד אתכם", "בחרו בין שישה מסלולי אחסון, מ־2 GB ועד 2 TB."],
             ["מחירים ברורים מראש", "השוו בין חיוב חודשי לשנתי לפני בחירת מסלול."],
           ],
           pricingTitle: "מסלולי אחסון פשוטים",
           pricingIntro: "בחרו את נפח האחסון שמתאים לכם. בחיוב שנתי מקבלים חודשיים ללא עלות.",
+          comparisonTitle: "השוואת מחירי המסלולים",
+          comparisonPlan: "מסלול",
+          comparisonStorage: "נפח אחסון",
+          comparisonPrice: "מחיר חודשי",
           billingLabel: "תקופת חיוב",
           monthly: "חודשי",
           yearly: "שנתי · חודשיים חינם",
           perMonth: "לחודש",
           perYear: "לשנה",
-          planNote: "נהלו את הקבצים לאחר התחברות. קישורי תשלום בקריפטו יופיעו לאחר הגדרתם.",
+          planNote: "נהלו את הקבצים לאחר התחברות. קישורי התשלום פותחים את NOWPayments.",
           choosePlan: "בחירת מסלול",
           plans: [
+            {
+              id: "free",
+              name: "Starter חינם",
+              storage: "2 GB",
+              badge: "חינם לתמיד",
+              description: "התחילו להשתמש באחסון ענן פרטי ללא תשלום.",
+              features: ["2 GB אחסון מוצפן", "עד 100 MB לקובץ", "10 GB העברה חודשית", "קישורי הורדה לשיתוף"],
+            },
             {
               id: "basic",
               name: "בסיסי",
               storage: "50 GB",
               badge: "",
               description: "נפח שימושי לגיבויים אישיים ולמסמכים.",
-              features: ["50 GB אחסון בענן", "העברות מהירות", "הגדרת תוקף לקישורים", "תמיכה בעדיפות בדוא״ל"],
+              features: ["50 GB אחסון מוצפן", "עד 2 GB לקובץ", "200 GB העברה חודשית", "קישורים מוגני סיסמה"],
             },
             {
               id: "popular",
               name: "פופולרי",
               storage: "100 GB",
-              badge: "הפופולרי ביותר",
+              badge: "הפופולרי ביותר ⭐",
               description: "מתאים ליוצרים ולעצמאים לשימוש יומיומי.",
-              features: ["100 GB אחסון בענן", "קישורי שיתוף ללא הגבלה", "העלאה של כמה קבצים יחד", "רוחב פס בעדיפות"],
+              features: ["100 GB אחסון מוצפן", "עד 5 GB לקובץ", "500 GB העברה חודשית", "מהירות הורדה בעדיפות"],
             },
             {
               id: "creator",
               name: "יוצרים",
               storage: "500 GB",
-              badge: "כולל API",
+              badge: "בחירת הלקוחות 🔥",
               description: "לצוותי מדיה, אוטומציה ותהליכי פיתוח.",
-              features: ["500 GB אחסון בענן", "גישה ל־API", "העלאות מתוכנתות", "העברת נתונים בקצב גבוה"],
+              features: ["500 GB אחסון מוצפן", "עד 15 GB לקובץ", "2 TB העברה חודשית", "גישה ל־REST API לאתרים"],
             },
             {
               id: "pro_1tb",
               name: "Pro ‏1 TB",
               storage: "1,000 GB",
-              badge: "Pro + API",
+              badge: "התמורה הטובה ביותר 💎",
               description: "טרה־בייט מלא וגישה ל־API לעומסי עבודה גדולים.",
-              features: ["1 TB אחסון בענן", "כמה אסימוני API", "החלפת אסימונים", "ניתוב ייעודי להעברות"],
+              features: ["1,000 GB (1 TB) אחסון", "גודל קובץ ללא הגבלה", "5 TB העברה חודשית", "גישה מלאה ל־S3 ול־REST API"],
             },
             {
               id: "enterprise",
-              name: "Enterprise",
+              name: "Enterprise ‏2 TB",
               storage: "2,000 GB",
               badge: "נפח מרבי",
               description: "נפח אחסון והעברה של 2 TB לארגונים.",
-              features: ["2 TB אחסון בענן", "גישה ל־API", "העברות מקבילות בהיקף מרבי", "SLA והטמעה ייעודית"],
+              features: ["2,000 GB (2 TB) אחסון", "גודל קובץ ללא הגבלה", "12 TB העברה חודשית", "מפתחות API ותמיכה ייעודיים"],
             },
           ],
           authLoginTitle: "התחברות ל־VaultStream",
@@ -1666,11 +1779,12 @@
       };
 
       const plans = [
+        { id: "free", monthly: 0, yearly: 0 },
         { id: "basic", monthly: 1.49, yearly: 14.9 },
         { id: "popular", monthly: 2.49, yearly: 24.9 },
-        { id: "creator", monthly: 6.99, yearly: 69.9 },
-        { id: "pro_1tb", monthly: 11.99, yearly: 119.9 },
-        { id: "enterprise", monthly: 21.99, yearly: 219.9 },
+        { id: "creator", monthly: 5.99, yearly: 59.9 },
+        { id: "pro_1tb", monthly: 8.99, yearly: 89.9 },
+        { id: "enterprise", monthly: 16.99, yearly: 169.9 },
       ];
 
       const nowPaymentsLinks = {
@@ -1721,7 +1835,7 @@
           const url = new URL(configuredUrl);
           const isNowPaymentsHost =
             url.hostname === "nowpayments.io" || url.hostname.endsWith(".nowpayments.io");
-          return url.protocol === "https:" && isNowPaymentsHost ? url.href : "";
+          return url.protocol === "https:" && isNowPaymentsHost ? configuredUrl : "";
         } catch {
           return "";
         }
@@ -1732,7 +1846,7 @@
         const cards = plans.map((plan) => {
           const localizedPlan = content.plans.find(({ id }) => id === plan.id);
           const card = document.createElement("article");
-          card.className = `plan-card${plan.id === "popular" ? " featured" : ""}`;
+          card.className = `plan-card${plan.id === "pro_1tb" ? " featured" : ""}`;
 
           const badge = document.createElement("span");
           badge.className = "plan-badge";
@@ -1776,29 +1890,48 @@
           const button = document.createElement("button");
           button.className = "plan-button";
           button.type = "button";
-          button.textContent = content.choosePlan;
-          button.addEventListener("click", () => openAuth("signup", plan.id));
+          const isFreePlan = plan.id === "free";
+          button.textContent = isFreePlan ? content.pricingStartFree : content.payWithCrypto;
+          button.addEventListener("click", () => {
+            if (isFreePlan) {
+              openAuth("signup", "free");
+              return;
+            }
+            const paymentUrl = getNowPaymentsUrl(plan.id);
+            if (paymentUrl) {
+              window.open(paymentUrl, "_blank", "noopener,noreferrer");
+            } else {
+              const status = document.getElementById("site-status");
+              status.textContent = content.paymentLinkUnavailable;
+              status.hidden = false;
+            }
+          });
           card.append(button);
-
-          const paymentUrl = getNowPaymentsUrl(plan.id);
-          if (paymentUrl) {
-            const paymentLink = document.createElement("a");
-            paymentLink.className = "payment-link";
-            paymentLink.href = paymentUrl;
-            paymentLink.target = "_blank";
-            paymentLink.rel = "noopener noreferrer";
-            paymentLink.textContent = content.payWithCrypto;
-            paymentLink.setAttribute("aria-label", `${content.payWithCrypto}: ${localizedPlan.name}`);
-            card.append(paymentLink);
-          } else if (nowPaymentsLinks[plan.id]) {
-            const paymentUnavailable = document.createElement("p");
-            paymentUnavailable.className = "plan-note";
-            paymentUnavailable.textContent = content.paymentLinkUnavailable;
-            card.append(paymentUnavailable);
-          }
           return card;
         });
         plansGrid.replaceChildren(...cards);
+        renderPricingComparison();
+      }
+
+      function renderPricingComparison() {
+        const content = translations[language];
+        const rows = plans.map((plan) => {
+          const localizedPlan = content.plans.find(({ id }) => id === plan.id);
+          const row = document.createElement("tr");
+          if (plan.id === "pro_1tb") row.className = "featured-row";
+          const values = [
+            localizedPlan.name,
+            localizedPlan.storage,
+            `${plan.monthly === 0 ? "$0" : `$${plan.monthly.toFixed(2)}`}/mo`,
+          ];
+          values.forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+          });
+          return row;
+        });
+        document.getElementById("pricing-comparison-body").replaceChildren(...rows);
       }
 
       function formatDate(value) {
@@ -2154,17 +2287,16 @@
       }
 
       async function restoreSession() {
-        const client = await supabaseReady;
-        if (!client) return;
+        if (!supabase) return;
         try {
-          const { data, error } = await client.auth.getSession();
+          const { data, error } = await supabase.auth.getSession();
           if (error) throw error;
           if (data.session?.user) await loadDashboard(data.session.user);
         } catch (error) {
           authMode = "login";
           authStatusText = `${translations[language].authErrorPrefix}${error.message}`;
           renderAuth();
-          authDialog.showModal();
+          if (!authDialog.open) authDialog.showModal();
         }
       }
 
@@ -2226,12 +2358,14 @@
         document.getElementById("dropzone-title").textContent = content.dropzoneTitle;
         document.getElementById("dropzone-note").textContent = content.dropzoneNote;
         document.getElementById("upload-account-note").textContent = content.uploadAccountNote;
-        document.getElementById("hero-signup-button").textContent = content.signupFree;
+        document.getElementById("hero-signup-button").textContent = content.heroSignup;
+        document.getElementById("hero-plans-button").textContent = content.viewPlans;
         document.getElementById("dashboard-upload-button").textContent = content.dashboardUpload;
         document.getElementById("qa-heading-text").textContent = content.qaHeading;
         document.getElementById("questions").setAttribute("aria-label", content.questionsLabel);
         questionButtons.forEach((button) => {
           button.textContent = content.questions[button.dataset.answer];
+          button.setAttribute("aria-pressed", String(button.dataset.answer === currentAnswer));
         });
         document.getElementById("question-label").textContent = content.questionLabel;
         questionInput.placeholder = content.placeholder;
@@ -2246,6 +2380,10 @@
         });
         document.getElementById("pricing-title").textContent = content.pricingTitle;
         document.getElementById("pricing-intro").textContent = content.pricingIntro;
+        document.getElementById("comparison-title").textContent = content.comparisonTitle;
+        document.getElementById("comparison-plan-heading").textContent = content.comparisonPlan;
+        document.getElementById("comparison-storage-heading").textContent = content.comparisonStorage;
+        document.getElementById("comparison-price-heading").textContent = content.comparisonPrice;
         document.getElementById("billing-toggle").setAttribute("aria-label", content.billingLabel);
         document.getElementById("monthly-button").textContent = content.monthly;
         document.getElementById("yearly-button").textContent = content.yearly;
@@ -2277,6 +2415,9 @@
         currentAnswer = answerKey;
         const content = translations[language];
         answer.textContent = content.answers[answerKey] || content.fallback;
+        questionButtons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.answer === answerKey));
+        });
       }
 
       questionButtons.forEach((button) => {
@@ -2318,7 +2459,11 @@
       });
 
       document.getElementById("hero-signup-button").addEventListener("click", () => {
-        openAuth("signup");
+        openAuth("signup", "free");
+      });
+
+      document.getElementById("hero-plans-button").addEventListener("click", () => {
+        document.getElementById("pricing").scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
       document.getElementById("dashboard-upload-button").addEventListener("click", () => {
@@ -2361,18 +2506,17 @@
         if (submitButton.disabled) return;
         submitButton.disabled = true;
         try {
-          const client = await supabaseReady;
-          if (!client) {
+          if (!supabase) {
             authStatusText = supabaseLoadError
               ? `${translations[language].authSdkLoadError}${supabaseLoadError}`
-              : translations[language].authMissingConfig;
+              : translations[language].authLoadingNotice;
             return;
           }
 
           const email = document.getElementById("auth-email").value.trim();
           const password = document.getElementById("auth-password").value;
           if (authMode === "signup") {
-            const { data, error } = await client.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
               email,
               password,
               options: { data: { accepted_terms_at: new Date().toISOString() } },
@@ -2387,7 +2531,7 @@
             }
             authStatusKey = "authEmailConfirmation";
           } else {
-            const { data, error } = await client.auth.signInWithPassword({ email, password });
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) throw error;
             const filesToUpload = pendingUploadFiles;
             authDialog.close();
@@ -2460,7 +2604,32 @@
 
       document.getElementById("dashboard-signout").addEventListener("click", signOut);
       renderLanguage();
-      restoreSession();
+      function initializeSupabase() {
+        if (supabase) return;
+        try {
+          if (!window.supabase || typeof window.supabase.createClient !== "function") {
+            throw new Error("Supabase browser SDK did not expose createClient.");
+          }
+          supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+          supabaseLoadError = "";
+          renderAuth();
+          void restoreSession();
+        } catch (error) {
+          supabaseLoadError = error.message || String(error);
+          renderAuth();
+        }
+      }
+
+      const supabaseScript = document.createElement("script");
+      supabaseScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.109.0/dist/umd/supabase.js";
+      supabaseScript.async = true;
+      supabaseScript.addEventListener("load", initializeSupabase);
+      supabaseScript.addEventListener("error", () => {
+        supabaseLoadError = "Supabase browser SDK could not be loaded.";
+        renderAuth();
+      });
+      document.body.append(supabaseScript);
+      });
     </script>
   </body>
 </html>
