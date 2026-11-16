@@ -45,6 +45,51 @@
         justify-content: space-between;
       }
 
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-button,
+      .plan-button,
+      .billing-button,
+      .auth-submit {
+        border: 0;
+        border-radius: 10px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 160ms ease, transform 160ms ease;
+      }
+
+      .header-button {
+        min-height: 40px;
+        padding: 8px 14px;
+      }
+
+      .button-secondary {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: #f8fafc;
+      }
+
+      .button-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .button-primary,
+      .auth-submit {
+        background: #4f46e5;
+        color: #fff;
+      }
+
+      .button-primary:hover,
+      .auth-submit:hover,
+      .plan-button:hover {
+        background: #4338ca;
+      }
+
       .brand {
         color: #f8fafc;
         font-size: 1.2rem;
@@ -75,13 +120,18 @@
       main {
         min-height: calc(100vh - 72px);
         min-height: calc(100svh - 72px);
-        display: grid;
-        place-items: center;
-        padding: 28px 20px 56px;
+        padding: 0 20px 56px;
       }
 
       .hero {
         width: min(100%, 760px);
+        min-height: min(760px, calc(100vh - 72px));
+        min-height: min(760px, calc(100svh - 72px));
+        margin-inline: auto;
+        padding: 28px 0 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-align: center;
       }
 
@@ -260,6 +310,488 @@
         background: #4338ca;
       }
 
+      .content-section {
+        width: min(100%, 1120px);
+        margin: 0 auto;
+        padding: 44px 0;
+      }
+
+      .section-heading {
+        margin: 0;
+        text-align: center;
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+      }
+
+      .section-intro {
+        max-width: 660px;
+        margin: 10px auto 28px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+        gap: 16px;
+      }
+
+      .benefit-card,
+      .plan-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+      }
+
+      .benefit-card {
+        padding: 22px;
+      }
+
+      .benefit-card h3 {
+        margin: 0 0 8px;
+        font-size: 1.05rem;
+      }
+
+      .benefit-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.65;
+      }
+
+      .billing-toggle {
+        width: fit-content;
+        margin: 22px auto 26px;
+        padding: 4px;
+        display: flex;
+        gap: 4px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(15, 23, 48, 0.75);
+      }
+
+      .billing-button {
+        min-height: 40px;
+        padding: 8px 14px;
+        background: transparent;
+        color: var(--muted);
+      }
+
+      .billing-button[aria-pressed="true"] {
+        background: #4f46e5;
+        color: #fff;
+      }
+
+      .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr));
+        align-items: stretch;
+        gap: 16px;
+      }
+
+      .plan-card {
+        min-width: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .plan-card.featured {
+        border-color: rgba(129, 140, 248, 0.8);
+        box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.2);
+      }
+
+      .plan-badge {
+        align-self: flex-start;
+        min-height: 24px;
+        margin-bottom: 8px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: rgba(99, 102, 241, 0.2);
+        color: #c7d2fe;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .plan-badge:empty {
+        visibility: hidden;
+      }
+
+      .plan-name {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+
+      .plan-storage {
+        margin-top: 5px;
+        color: var(--primary);
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .plan-price {
+        margin-top: 6px;
+        font-size: 1.6rem;
+        font-weight: 800;
+      }
+
+      .plan-period {
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 400;
+      }
+
+      .plan-description {
+        min-height: 3.2em;
+        margin: 12px 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+
+      .plan-features {
+        margin: 0 0 20px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .plan-features li {
+        margin-top: 9px;
+        color: #d3dbea;
+        font-size: 0.84rem;
+        line-height: 1.5;
+      }
+
+      .plan-features li::before {
+        content: "✓";
+        margin-inline-end: 8px;
+        color: #34d399;
+        font-weight: 800;
+      }
+
+      .plan-button {
+        width: 100%;
+        min-height: 42px;
+        margin-top: auto;
+        padding: 9px 12px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+
+      .featured .plan-button {
+        background: #4f46e5;
+      }
+
+      .plan-note {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-align: center;
+      }
+
+      .auth-dialog {
+        width: min(calc(100% - 32px), 430px);
+        max-width: 430px;
+        max-height: min(90vh, 700px);
+        padding: 0;
+        overflow: auto;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: #0d1326;
+        color: #f8fafc;
+      }
+
+      .auth-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.76);
+        backdrop-filter: blur(4px);
+      }
+
+      .auth-content {
+        padding: 24px;
+      }
+
+      .auth-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .auth-title {
+        margin: 0;
+        font-size: 1.35rem;
+      }
+
+      .auth-close {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: transparent;
+        color: #f8fafc;
+        font-size: 1.3rem;
+        cursor: pointer;
+      }
+
+      .auth-notice,
+      .auth-status {
+        margin: 14px 0;
+        padding: 11px 12px;
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        border-radius: 10px;
+        background: rgba(251, 191, 36, 0.08);
+        color: #fde68a;
+        font-size: 0.84rem;
+        line-height: 1.6;
+      }
+
+      .auth-selected-plan {
+        margin: 12px 0 0;
+        color: #c7d2fe;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .auth-free-storage {
+        margin: 14px 0 0;
+        padding: 11px 12px;
+        border: 1px solid rgba(52, 211, 153, 0.35);
+        border-radius: 10px;
+        background: rgba(52, 211, 153, 0.08);
+        color: #a7f3d0;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .auth-free-storage[hidden],
+      .auth-selected-plan[hidden],
+      .terms-field[hidden] {
+        display: none;
+      }
+
+      .auth-status:empty {
+        display: none;
+      }
+
+      .auth-form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .auth-field label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .auth-field input[type="email"],
+      .auth-field input[type="password"] {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: #090d1d;
+        color: #f8fafc;
+        font: inherit;
+      }
+
+      .terms-field {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.5;
+      }
+
+      .terms-field input {
+        margin-top: 4px;
+      }
+
+      .auth-submit {
+        min-height: 44px;
+        padding: 10px 14px;
+      }
+
+      .auth-submit:disabled,
+      .auth-field input:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .dashboard-page {
+        width: min(100% - 40px, 1120px);
+        margin: 0 auto;
+        padding: 36px 0 64px;
+      }
+
+      .dashboard-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .dashboard-title {
+        margin: 0;
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+      }
+
+      .dashboard-email {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .dashboard-card {
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+      }
+
+      .dashboard-card h2 {
+        margin: 0 0 16px;
+        font-size: 1.2rem;
+      }
+
+      .subscription-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .subscription-card {
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(5, 8, 20, 0.45);
+      }
+
+      .subscription-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .subscription-plan {
+        margin: 0;
+        font-size: 1.05rem;
+      }
+
+      .subscription-status {
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: rgba(52, 211, 153, 0.12);
+        color: #a7f3d0;
+        font-size: 0.77rem;
+        font-weight: 700;
+      }
+
+      .subscription-details {
+        margin: 12px 0 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .subscription-details div {
+        min-width: 0;
+      }
+
+      .subscription-details dt {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .subscription-details dd {
+        margin: 3px 0 0;
+        overflow-wrap: anywhere;
+        font-size: 0.88rem;
+      }
+
+      .dashboard-muted,
+      .dashboard-status {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .dashboard-status:empty {
+        display: none;
+      }
+
+      .profile-form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .profile-field label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .profile-field input {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: #090d1d;
+        color: #f8fafc;
+        font: inherit;
+      }
+
+      .profile-field input[readonly] {
+        color: var(--muted);
+      }
+
+      .profile-save {
+        min-height: 44px;
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 10px;
+        background: #4f46e5;
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .profile-save:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .site-status {
+        width: min(100% - 40px, 1120px);
+        margin: 0 auto;
+        padding: 12px 14px;
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        border-radius: 10px;
+        background: rgba(251, 191, 36, 0.08);
+        color: #fde68a;
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+
       @media (max-width: 520px) {
         .site-header {
           height: 60px;
@@ -268,7 +800,13 @@
         main {
           min-height: calc(100vh - 60px);
           min-height: calc(100svh - 60px);
-          padding-inline: 16px;
+          padding: 0 16px 40px;
+        }
+
+        .hero {
+          min-height: min(760px, calc(100vh - 60px));
+          min-height: min(760px, calc(100svh - 60px));
+          padding-bottom: 40px;
         }
 
         .qa-card {
@@ -277,6 +815,43 @@
 
         .ask-form {
           flex-direction: column;
+        }
+
+        .site-header {
+          width: calc(100% - 32px);
+        }
+
+        .header-actions {
+          gap: 6px;
+        }
+
+        .header-button {
+          min-height: 36px;
+          padding: 7px 9px;
+          font-size: 0.82rem;
+        }
+
+        .language-select {
+          padding: 7px 8px;
+          font-size: 0.85rem;
+        }
+
+        .billing-button {
+          padding-inline: 10px;
+          font-size: 0.82rem;
+        }
+
+        .dashboard-page {
+          width: calc(100% - 32px);
+          padding-top: 24px;
+        }
+
+        .dashboard-header {
+          flex-direction: column;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -307,14 +882,20 @@
   <body>
     <header class="site-header">
       <a class="brand" href="#" id="brand-link" aria-label="VaultStream — home">Vault<span>Stream</span></a>
-      <label class="sr-only" for="language-select" id="language-label">Language</label>
-      <select class="language-select" id="language-select" aria-labelledby="language-label">
-        <option value="en" selected>English</option>
-        <option value="he">עברית</option>
-      </select>
+      <div class="header-actions">
+        <button class="header-button button-secondary" id="login-button" type="button">Log in</button>
+        <button class="header-button button-primary" id="signup-button" type="button">Sign up</button>
+        <label class="sr-only" for="language-select" id="language-label">Language</label>
+        <select class="language-select" id="language-select" aria-labelledby="language-label">
+          <option value="en" selected>English</option>
+          <option value="he">עברית</option>
+        </select>
+      </div>
     </header>
 
-    <main>
+    <p class="site-status" id="site-status" role="status" aria-live="polite" hidden></p>
+
+    <main id="marketing-content">
       <section class="hero" aria-labelledby="page-title">
         <div class="logo-animation" aria-hidden="true">
           <div class="logo-ring"></div>
@@ -359,15 +940,121 @@
           </form>
         </section>
       </section>
+
+      <section class="content-section" id="why-us" aria-labelledby="why-title">
+        <h2 class="section-heading" id="why-title">Why choose VaultStream?</h2>
+        <p class="section-intro" id="why-intro">Straightforward storage options, clear pricing, and a privacy-conscious experience.</p>
+        <div class="benefit-grid">
+          <article class="benefit-card">
+            <h3 id="benefit-privacy-title">Privacy-conscious by design</h3>
+            <p id="benefit-privacy-text">Questions you type here stay in your browser; this page doesn't send them to a server.</p>
+          </article>
+          <article class="benefit-card">
+            <h3 id="benefit-plans-title">Plans that scale with you</h3>
+            <p id="benefit-plans-text">Choose from five storage tiers, from a free starter plan to 1 TB.</p>
+          </article>
+          <article class="benefit-card">
+            <h3 id="benefit-pricing-title">Clear, upfront pricing</h3>
+            <p id="benefit-pricing-text">Compare monthly and yearly prices before choosing a plan.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section" id="pricing" aria-labelledby="pricing-title">
+        <h2 class="section-heading" id="pricing-title">Simple cloud storage plans</h2>
+        <p class="section-intro" id="pricing-intro">Pick the amount of storage that fits your needs. Annual billing includes two months free.</p>
+        <div class="billing-toggle" role="group" aria-label="Billing period" id="billing-toggle">
+          <button class="billing-button" id="monthly-button" type="button" aria-pressed="true">Monthly</button>
+          <button class="billing-button" id="yearly-button" type="button" aria-pressed="false">Yearly · 2 months free</button>
+        </div>
+        <div class="plans-grid" id="plans-grid" aria-live="polite"></div>
+        <p class="plan-note" id="plan-note">Plan details are informational; file storage, checkout, and account access aren't connected on this page.</p>
+      </section>
     </main>
 
-    <script>
+    <section class="dashboard-page" id="account-dashboard" hidden aria-labelledby="dashboard-title">
+      <header class="dashboard-header">
+        <div>
+          <h1 class="dashboard-title" id="dashboard-title">Your account</h1>
+          <p class="dashboard-email" id="dashboard-email"></p>
+        </div>
+        <button class="header-button button-secondary" id="dashboard-signout" type="button">Sign out</button>
+      </header>
+      <p class="dashboard-status" id="dashboard-status" role="status" aria-live="polite"></p>
+      <div class="dashboard-grid">
+        <section class="dashboard-card" aria-labelledby="subscriptions-title">
+          <h2 id="subscriptions-title">Your subscriptions</h2>
+          <div class="subscription-list" id="subscription-list" aria-live="polite"></div>
+        </section>
+        <section class="dashboard-card" aria-labelledby="profile-title">
+          <h2 id="profile-title">Personal details</h2>
+          <form class="profile-form" id="profile-form">
+            <div class="profile-field">
+              <label for="profile-name" id="profile-name-label">Full name</label>
+              <input id="profile-name" name="full_name" type="text" maxlength="120" autocomplete="name" />
+            </div>
+            <div class="profile-field">
+              <label for="profile-phone" id="profile-phone-label">Phone number</label>
+              <input id="profile-phone" name="phone" type="tel" maxlength="40" autocomplete="tel" />
+            </div>
+            <div class="profile-field">
+              <label for="profile-email" id="profile-email-label">Account email</label>
+              <input id="profile-email" name="email" type="email" readonly />
+            </div>
+            <button class="profile-save" id="profile-save" type="submit">Save changes</button>
+            <p class="dashboard-status" id="profile-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <div class="auth-content">
+        <div class="auth-title-row">
+          <h2 class="auth-title" id="auth-title">Sign up for VaultStream</h2>
+          <button class="auth-close" id="auth-close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <p class="auth-free-storage" id="auth-free-storage">New sign-ups include 2 GB of free storage. Upgrade to a paid plan only if you need more.</p>
+        <p class="auth-selected-plan" id="auth-selected-plan">Selected plan: Basic</p>
+        <p class="auth-notice" id="auth-notice">
+          Account access isn't connected on this page. Don't enter a real password; form data isn't sent or stored.
+        </p>
+        <p class="auth-status" id="auth-status" role="status" aria-live="polite"></p>
+        <form class="auth-form" id="auth-form">
+          <div class="auth-field">
+            <label for="auth-email" id="auth-email-label">Email address</label>
+            <input id="auth-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="auth-field">
+            <label for="auth-password" id="auth-password-label">Password</label>
+            <input id="auth-password" name="password" type="password" autocomplete="new-password" required />
+          </div>
+          <label class="terms-field" id="terms-field" for="agree-terms">
+            <input id="agree-terms" type="checkbox" />
+            <span id="terms-text">I agree to the Terms of Service.</span>
+          </label>
+          <button class="auth-submit" id="auth-submit" type="submit">Create account</button>
+        </form>
+      </div>
+    </dialog>
+
+    <script type="module">
+      import { createClient } from "@supabase/supabase-js";
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+      const supabase = supabaseUrl && supabaseAnonKey
+        ? createClient(supabaseUrl, supabaseAnonKey)
+        : null;
+
       const translations = {
         en: {
           title: "VaultStream — Cloud Storage",
           description: "Quick information about cloud file storage from VaultStream.",
           brandLabel: "VaultStream — home",
           languageLabel: "Language",
+          login: "Log in",
+          signup: "Sign up",
           welcome: "Welcome to ",
           intro: "Everything you need to know about storing files in the cloud—quick answers, no waiting.",
           qaHeading: "How can we help?",
@@ -377,23 +1064,137 @@
             upload: "Can I upload files?",
             security: "How are files protected?",
           },
-          welcomeAnswer: "Choose a common question or type your own. This is an informational page only—file uploads and account management aren't available here yet.",
+          welcomeAnswer: "Choose a common question or type your own. File uploads aren't available here; account access requires a configured Supabase project.",
           answers: {
-            service: "VaultStream is an information interface about cloud file storage. This page isn't connected to a storage service or user accounts.",
+            service: "VaultStream provides information about cloud storage plans. Sign in with a configured account to view your subscription and edit your profile.",
             upload: "File uploads aren't available on this page right now. No files are sent or stored here.",
             security: "This page doesn't upload or store files, so it can't make guarantees about file security or encryption. Don't enter personal or sensitive information.",
-            account: "Account creation and sign-in aren't available on this page right now.",
+            account: "With Supabase configured, you can sign in to view subscription dates and update your name and phone number.",
           },
           questionLabel: "Type your question",
           placeholder: "Type your question...",
           ask: "Ask",
           fallback: "I couldn't find an answer to that question. Try one of the common questions above.",
+          whyTitle: "Why choose VaultStream?",
+          whyIntro: "Straightforward storage options, clear pricing, and a privacy-conscious experience.",
+          benefits: [
+            ["Privacy-conscious by design", "Questions you type here stay in your browser; this page doesn't send them to a server."],
+            ["Plans that scale with you", "Choose from five storage tiers, from 50 GB to 2 TB."],
+            ["Clear, upfront pricing", "Compare monthly and yearly prices before choosing a plan."],
+          ],
+          pricingTitle: "Simple cloud storage plans",
+          pricingIntro: "Pick the amount of storage that fits your needs. Annual billing includes two months free.",
+          billingLabel: "Billing period",
+          monthly: "Monthly",
+          yearly: "Yearly · 2 months free",
+          perMonth: "/mo",
+          perYear: "/yr",
+          planNote: "Plan details are informational; file storage and checkout aren't connected on this page.",
+          choosePlan: "Choose plan",
+          plans: [
+            {
+              id: "basic",
+              name: "Basic",
+              storage: "50 GB",
+              badge: "",
+              description: "Essential space for personal backups and documents.",
+              features: ["50 GB cloud storage", "High-speed transfers", "Custom link expiration", "Priority email support"],
+            },
+            {
+              id: "popular",
+              name: "Popular",
+              storage: "100 GB",
+              badge: "Most popular",
+              description: "Great value for everyday creators and freelancers.",
+              features: ["100 GB cloud storage", "Unlimited share links", "Batch uploads", "Priority transfer bandwidth"],
+            },
+            {
+              id: "creator",
+              name: "Creator",
+              storage: "500 GB",
+              badge: "API enabled",
+              description: "Built for media teams, automation, and developer workflows.",
+              features: ["500 GB cloud storage", "API access", "Programmatic uploads", "High-throughput transfers"],
+            },
+            {
+              id: "pro_1tb",
+              name: "Pro 1 TB",
+              storage: "1,000 GB",
+              badge: "Pro + API",
+              description: "A full terabyte with API access for larger workloads.",
+              features: ["1 TB cloud storage", "Multiple API tokens", "Token rotation", "Dedicated transfer routing"],
+            },
+            {
+              id: "enterprise",
+              name: "Enterprise",
+              storage: "2,000 GB",
+              badge: "Max capacity",
+              description: "2 TB storage and transfer capacity for organizations.",
+              features: ["2 TB cloud storage", "API access", "Maximum concurrent transfers", "SLA and dedicated onboarding"],
+            },
+          ],
+          authLoginTitle: "Log in to VaultStream",
+          authSignupTitle: "Create a VaultStream account",
+          authFreeStorage: "New sign-ups include 2 GB of free storage. Upgrade to a paid plan only if you need more.",
+          authNotice: "Supabase isn't configured for this deployment. Sign-in and profile storage are unavailable until it is configured.",
+          authConnectedNotice: "Your account is managed securely through Supabase.",
+          authMissingConfig: "Account access is unavailable because Supabase isn't configured.",
+          authEmailConfirmation: "Check your email to confirm your account, then log in.",
+          authErrorPrefix: "Authentication failed: ",
+          selectedPlan: "Interested in paid plan (not active until checkout)",
+          email: "Email address",
+          password: "Password",
+          terms: "I agree to the Terms of Service.",
+          authContinue: "Continue",
+          authCreate: "Create account",
+          authClose: "Close",
+          dashboardTitle: "Your account",
+          subscriptionsTitle: "Your subscriptions",
+          profileTitle: "Personal details",
+          fullName: "Full name",
+          phone: "Phone number",
+          accountEmail: "Account email",
+          saveChanges: "Save changes",
+          signOut: "Sign out",
+          dashboardLoading: "Loading your account details…",
+          dashboardLoadError: "Unable to load account details: ",
+          profileLoadError: "Unable to load your profile: ",
+          subscriptionsLoadError: "Unable to load subscription details: ",
+          noSubscriptions: "No subscription records were found for this account.",
+          subscriptionStart: "Started",
+          subscriptionEnd: "Current period ends",
+          freeSubscriptionEnd: "No scheduled expiry",
+          dateUnavailable: "Not available",
+          billingPeriods: { free: "Free", monthly: "Monthly", yearly: "Yearly", unknown: "Unknown" },
+          subscriptionStatuses: {
+            active: "Active",
+            cancelled: "Cancelled",
+            expired: "Expired",
+            past_due: "Payment overdue",
+            paused: "Paused",
+            on_trial: "Trial",
+            unpaid: "Unpaid",
+            unknown: "Unknown",
+          },
+          subscriptionPlans: {
+            free: "Free · 2 GB",
+            basic: "Basic · 50 GB",
+            popular: "Popular · 100 GB",
+            creator: "Creator · 500 GB",
+            pro_1tb: "Pro · 1 TB",
+            enterprise: "Enterprise · 2 TB",
+            unknown: "Unknown plan",
+          },
+          profileSaved: "Personal details saved.",
+          profileSaveError: "Unable to save personal details: ",
         },
         he: {
           title: "VaultStream — אחסון בענן",
           description: "מידע מהיר על אחסון קבצים בענן מבית VaultStream.",
           brandLabel: "VaultStream — לעמוד הראשי",
           languageLabel: "שפה",
+          login: "התחברות",
+          signup: "הרשמה",
           welcome: "ברוכים הבאים ל־",
           intro: "כל מה שרציתם לדעת על אחסון הקבצים שלכם בענן — תשובות מהירות, בלי לחכות.",
           qaHeading: "איך אפשר לעזור לכם?",
@@ -403,19 +1204,139 @@
             upload: "אפשר להעלות קבצים?",
             security: "איך שומרים על הקבצים?",
           },
-          welcomeAnswer: "בחרו שאלה נפוצה או כתבו שאלה משלכם. זהו דף מידע בלבד — העלאת קבצים וניהול חשבון אינם זמינים כאן כרגע.",
+          welcomeAnswer: "בחרו שאלה נפוצה או כתבו שאלה משלכם. העלאת קבצים אינה זמינה כאן; גישה לחשבון דורשת פרויקט Supabase מוגדר.",
           answers: {
-            service: "VaultStream הוא ממשק מידע בנושא אחסון קבצים בענן. הדף הנוכחי אינו מחובר לשירות אחסון או לחשבונות משתמשים.",
+            service: "VaultStream מציג מידע על מסלולי אחסון בענן. התחברו לחשבון מוגדר כדי לצפות במנוי ולעדכן את הפרופיל.",
             upload: "העלאת קבצים אינה זמינה בדף הזה כרגע. לא נשלחים או נשמרים כאן קבצים.",
             security: "אין בדף הזה העלאה או אחסון של קבצים, ולכן הוא אינו יכול להבטיח אבטחה או הצפנה של קבצים. אל תזינו מידע אישי או רגיש.",
-            account: "יצירת חשבון והתחברות אינם זמינים בדף הזה כרגע.",
+            account: "לאחר הגדרת Supabase אפשר להתחבר, לצפות בתאריכי המנוי ולעדכן שם ומספר טלפון.",
           },
           questionLabel: "כתבו את השאלה שלכם",
           placeholder: "כתבו שאלה...",
           ask: "שליחת שאלה",
           fallback: "לא מצאתי תשובה לשאלה הזו. אפשר לבחור אחת מהשאלות הנפוצות למעלה.",
+          whyTitle: "למה לבחור ב־VaultStream?",
+          whyIntro: "מסלולי אחסון ברורים, מחירים שקופים וחוויה שמתחשבת בפרטיות.",
+          benefits: [
+            ["פרטיות כברירת מחדל", "השאלות שתכתבו כאן נשארות בדפדפן — הדף אינו שולח אותן לשרת."],
+            ["מסלולים שגדלים יחד אתכם", "בחרו בין חמישה מסלולי אחסון, מ־50 GB ועד 2 TB."],
+            ["מחירים ברורים מראש", "השוו בין חיוב חודשי לשנתי לפני בחירת מסלול."],
+          ],
+          pricingTitle: "מסלולי אחסון פשוטים",
+          pricingIntro: "בחרו את נפח האחסון שמתאים לכם. בחיוב שנתי מקבלים חודשיים ללא עלות.",
+          billingLabel: "תקופת חיוב",
+          monthly: "חודשי",
+          yearly: "שנתי · חודשיים חינם",
+          perMonth: "לחודש",
+          perYear: "לשנה",
+          planNote: "פרטי המסלולים הם להמחשה; אחסון קבצים ותשלום אינם מחוברים לדף הזה.",
+          choosePlan: "בחירת מסלול",
+          plans: [
+            {
+              id: "basic",
+              name: "בסיסי",
+              storage: "50 GB",
+              badge: "",
+              description: "נפח שימושי לגיבויים אישיים ולמסמכים.",
+              features: ["50 GB אחסון בענן", "העברות מהירות", "הגדרת תוקף לקישורים", "תמיכה בעדיפות בדוא״ל"],
+            },
+            {
+              id: "popular",
+              name: "פופולרי",
+              storage: "100 GB",
+              badge: "הפופולרי ביותר",
+              description: "מתאים ליוצרים ולעצמאים לשימוש יומיומי.",
+              features: ["100 GB אחסון בענן", "קישורי שיתוף ללא הגבלה", "העלאה של כמה קבצים יחד", "רוחב פס בעדיפות"],
+            },
+            {
+              id: "creator",
+              name: "יוצרים",
+              storage: "500 GB",
+              badge: "כולל API",
+              description: "לצוותי מדיה, אוטומציה ותהליכי פיתוח.",
+              features: ["500 GB אחסון בענן", "גישה ל־API", "העלאות מתוכנתות", "העברת נתונים בקצב גבוה"],
+            },
+            {
+              id: "pro_1tb",
+              name: "Pro ‏1 TB",
+              storage: "1,000 GB",
+              badge: "Pro + API",
+              description: "טרה־בייט מלא וגישה ל־API לעומסי עבודה גדולים.",
+              features: ["1 TB אחסון בענן", "כמה אסימוני API", "החלפת אסימונים", "ניתוב ייעודי להעברות"],
+            },
+            {
+              id: "enterprise",
+              name: "Enterprise",
+              storage: "2,000 GB",
+              badge: "נפח מרבי",
+              description: "נפח אחסון והעברה של 2 TB לארגונים.",
+              features: ["2 TB אחסון בענן", "גישה ל־API", "העברות מקבילות בהיקף מרבי", "SLA והטמעה ייעודית"],
+            },
+          ],
+          authLoginTitle: "התחברות ל־VaultStream",
+          authSignupTitle: "יצירת חשבון VaultStream",
+          authFreeStorage: "בהרשמה מקבלים 2 GB אחסון בחינם. אפשר לשדרג למסלול בתשלום אם צריך יותר.",
+          authNotice: "Supabase אינו מוגדר לפריסה הזו. התחברות ושמירת פרופיל לא יהיו זמינות עד להגדרתו.",
+          authConnectedNotice: "החשבון שלכם מנוהל בצורה מאובטחת דרך Supabase.",
+          authMissingConfig: "הגישה לחשבון אינה זמינה כי Supabase אינו מוגדר.",
+          authEmailConfirmation: "בדקו את הדוא״ל כדי לאשר את החשבון, ואז התחברו.",
+          authErrorPrefix: "ההתחברות נכשלה: ",
+          selectedPlan: "מסלול בתשלום לעניין בלבד (טרם הופעל)",
+          email: "כתובת דוא״ל",
+          password: "סיסמה",
+          terms: "אני מאשר/ת את תנאי השירות.",
+          authContinue: "המשך",
+          authCreate: "יצירת חשבון",
+          authClose: "סגירה",
+          dashboardTitle: "החשבון שלי",
+          subscriptionsTitle: "המנויים שלי",
+          profileTitle: "פרטים אישיים",
+          fullName: "שם מלא",
+          phone: "מספר טלפון",
+          accountEmail: "דוא״ל החשבון",
+          saveChanges: "שמירת שינויים",
+          signOut: "התנתקות",
+          dashboardLoading: "פרטי החשבון נטענים…",
+          dashboardLoadError: "לא ניתן לטעון את פרטי החשבון: ",
+          profileLoadError: "לא ניתן לטעון את הפרופיל: ",
+          subscriptionsLoadError: "לא ניתן לטעון את פרטי המנוי: ",
+          noSubscriptions: "לא נמצאו מנויים בחשבון הזה.",
+          subscriptionStart: "תאריך התחלה",
+          subscriptionEnd: "סיום התקופה הנוכחית",
+          freeSubscriptionEnd: "ללא מועד תפוגה מתוכנן",
+          dateUnavailable: "לא זמין",
+          billingPeriods: { free: "חינם", monthly: "חודשי", yearly: "שנתי", unknown: "לא ידוע" },
+          subscriptionStatuses: {
+            active: "פעיל",
+            cancelled: "בוטל",
+            expired: "פג תוקף",
+            past_due: "התשלום באיחור",
+            paused: "מושהה",
+            on_trial: "תקופת ניסיון",
+            unpaid: "לא שולם",
+            unknown: "לא ידוע",
+          },
+          subscriptionPlans: {
+            free: "חינם · 2 GB",
+            basic: "בסיסי · 50 GB",
+            popular: "פופולרי · 100 GB",
+            creator: "יוצרים · 500 GB",
+            pro_1tb: "Pro · 1 TB",
+            enterprise: "Enterprise · 2 TB",
+            unknown: "מסלול לא ידוע",
+          },
+          profileSaved: "הפרטים האישיים נשמרו.",
+          profileSaveError: "לא ניתן לשמור את הפרטים האישיים: ",
         },
       };
+
+      const plans = [
+        { id: "basic", monthly: 1.49, yearly: 14.9 },
+        { id: "popular", monthly: 2.49, yearly: 24.9 },
+        { id: "creator", monthly: 6.99, yearly: 69.9 },
+        { id: "pro_1tb", monthly: 11.99, yearly: 119.9 },
+        { id: "enterprise", monthly: 21.99, yearly: 219.9 },
+      ];
 
       const keywords = {
         service: ["what is", "vaultstream", "service", "website", "מהו", "שירות", "אתר"],
@@ -428,8 +1349,251 @@
       const answer = document.getElementById("answer");
       const questionInput = document.getElementById("question-input");
       const questionButtons = document.querySelectorAll(".question-chip");
+      const plansGrid = document.getElementById("plans-grid");
+      const authDialog = document.getElementById("auth-dialog");
+      const authForm = document.getElementById("auth-form");
+      const termsCheckbox = document.getElementById("agree-terms");
+      const marketingContent = document.getElementById("marketing-content");
+      const accountDashboard = document.getElementById("account-dashboard");
+      const profileForm = document.getElementById("profile-form");
+      const profileSaveButton = document.getElementById("profile-save");
       let language = "en";
       let currentAnswer = "welcomeAnswer";
+      let billingCycle = "monthly";
+      let authMode = "signup";
+      let selectedPlanId = "basic";
+      let authStatusKey = "";
+      let authStatusText = "";
+      let currentUser = null;
+      let currentSubscriptions = [];
+
+      function renderPlans() {
+        const content = translations[language];
+        const cards = plans.map((plan) => {
+          const localizedPlan = content.plans.find(({ id }) => id === plan.id);
+          const card = document.createElement("article");
+          card.className = `plan-card${plan.id === "popular" ? " featured" : ""}`;
+
+          const badge = document.createElement("span");
+          badge.className = "plan-badge";
+          badge.textContent = localizedPlan.badge;
+          card.append(badge);
+
+          const name = document.createElement("h3");
+          name.className = "plan-name";
+          name.textContent = localizedPlan.name;
+          card.append(name);
+
+          const storage = document.createElement("div");
+          storage.className = "plan-storage";
+          storage.textContent = localizedPlan.storage;
+          card.append(storage);
+
+          const price = document.createElement("div");
+          price.className = "plan-price";
+          const amount = billingCycle === "monthly" ? plan.monthly : plan.yearly;
+          price.append(document.createTextNode(amount === 0 ? "$0" : `$${amount.toFixed(2)}`));
+          const period = document.createElement("span");
+          period.className = "plan-period";
+          period.textContent = billingCycle === "monthly" ? content.perMonth : content.perYear;
+          price.append(period);
+          card.append(price);
+
+          const description = document.createElement("p");
+          description.className = "plan-description";
+          description.textContent = localizedPlan.description;
+          card.append(description);
+
+          const featureList = document.createElement("ul");
+          featureList.className = "plan-features";
+          localizedPlan.features.forEach((feature) => {
+            const item = document.createElement("li");
+            item.textContent = feature;
+            featureList.append(item);
+          });
+          card.append(featureList);
+
+          const button = document.createElement("button");
+          button.className = "plan-button";
+          button.type = "button";
+          button.textContent = content.choosePlan;
+          button.addEventListener("click", () => openAuth("signup", plan.id));
+          card.append(button);
+          return card;
+        });
+        plansGrid.replaceChildren(...cards);
+      }
+
+      function formatDate(value) {
+        if (!value) return translations[language].dateUnavailable;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return translations[language].dateUnavailable;
+        return new Intl.DateTimeFormat(language === "he" ? "he-IL" : "en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(date);
+      }
+
+      function renderSubscriptions(records) {
+        const content = translations[language];
+        const subscriptionList = document.getElementById("subscription-list");
+        if (!records.length) {
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "dashboard-muted";
+          emptyMessage.textContent = content.noSubscriptions;
+          subscriptionList.replaceChildren(emptyMessage);
+          return;
+        }
+
+        const cards = records.map((record) => {
+          const card = document.createElement("article");
+          card.className = "subscription-card";
+
+          const topline = document.createElement("div");
+          topline.className = "subscription-topline";
+          const planName = document.createElement("h3");
+          planName.className = "subscription-plan";
+          planName.textContent = content.subscriptionPlans[record.plan_id] || content.subscriptionPlans.unknown;
+          const status = document.createElement("span");
+          status.className = "subscription-status";
+          status.textContent = content.subscriptionStatuses[record.status] || content.subscriptionStatuses.unknown;
+          topline.append(planName, status);
+          card.append(topline);
+
+          const details = document.createElement("dl");
+          details.className = "subscription-details";
+          const values = [
+            [
+              content.billingLabel,
+              content.billingPeriods[record.billing_period] || content.subscriptionStatuses.unknown,
+            ],
+            [content.subscriptionStart, formatDate(record.started_at)],
+            [
+              content.subscriptionEnd,
+              record.current_period_end
+                ? formatDate(record.current_period_end)
+                : record.plan_id === "free"
+                  ? content.freeSubscriptionEnd
+                  : content.dateUnavailable,
+            ],
+          ];
+          values.forEach(([label, value]) => {
+            const item = document.createElement("div");
+            const term = document.createElement("dt");
+            term.textContent = label;
+            const description = document.createElement("dd");
+            description.textContent = value;
+            item.append(term, description);
+            details.append(item);
+          });
+          card.append(details);
+          return card;
+        });
+        subscriptionList.replaceChildren(...cards);
+      }
+
+      async function loadDashboard(user) {
+        currentUser = user;
+        currentSubscriptions = [];
+        setSignedInState(true);
+        document.getElementById("dashboard-email").textContent = user.email || "";
+        document.getElementById("profile-email").value = user.email || "";
+        document.getElementById("profile-name").value = "";
+        document.getElementById("profile-phone").value = "";
+        document.getElementById("dashboard-status").textContent = translations[language].dashboardLoading;
+        document.getElementById("profile-status").textContent = "";
+        renderSubscriptions(currentSubscriptions);
+
+        try {
+          const [profileResult, subscriptionResult] = await Promise.all([
+            supabase
+              .from("profiles")
+              .select("full_name, phone")
+              .eq("id", user.id)
+              .maybeSingle(),
+            supabase
+              .from("subscriptions")
+              .select("id, plan_id, billing_period, status, started_at, current_period_end")
+              .eq("user_id", user.id)
+              .order("started_at", { ascending: false }),
+          ]);
+
+          const errors = [];
+          if (profileResult.error) {
+            errors.push(`${translations[language].profileLoadError}${profileResult.error.message}`);
+          } else if (profileResult.data) {
+            document.getElementById("profile-name").value = profileResult.data.full_name || "";
+            document.getElementById("profile-phone").value = profileResult.data.phone || "";
+          }
+
+          if (subscriptionResult.error) {
+            errors.push(`${translations[language].subscriptionsLoadError}${subscriptionResult.error.message}`);
+          } else {
+            currentSubscriptions = subscriptionResult.data || [];
+            renderSubscriptions(currentSubscriptions);
+          }
+
+          document.getElementById("dashboard-status").textContent = errors.join(" ");
+        } catch (error) {
+          document.getElementById("dashboard-status").textContent =
+            `${translations[language].dashboardLoadError}${error.message}`;
+        }
+      }
+
+      async function restoreSession() {
+        if (!supabase) return;
+        try {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          if (data.session?.user) await loadDashboard(data.session.user);
+        } catch (error) {
+          authMode = "login";
+          authStatusText = `${translations[language].authErrorPrefix}${error.message}`;
+          renderAuth();
+          authDialog.showModal();
+        }
+      }
+
+      function renderAuth() {
+        const content = translations[language];
+        const isSignup = authMode === "signup";
+        const selectedPlan = content.plans.find(({ id }) => id === selectedPlanId);
+        document.getElementById("auth-title").textContent = isSignup
+          ? content.authSignupTitle
+          : content.authLoginTitle;
+        document.getElementById("auth-free-storage").textContent = content.authFreeStorage;
+        document.getElementById("auth-free-storage").hidden = !isSignup;
+        document.getElementById("auth-notice").textContent = supabase
+          ? content.authConnectedNotice
+          : content.authNotice;
+        document.getElementById("auth-selected-plan").textContent = isSignup
+          ? `${content.selectedPlan}: ${selectedPlan.name}`
+          : "";
+        document.getElementById("auth-selected-plan").hidden = !isSignup;
+        document.getElementById("auth-email-label").textContent = content.email;
+        document.getElementById("auth-password-label").textContent = content.password;
+        document.getElementById("terms-text").textContent = content.terms;
+        document.getElementById("terms-field").hidden = !isSignup;
+        termsCheckbox.required = isSignup;
+        document.getElementById("auth-submit").textContent = isSignup
+          ? content.authCreate
+          : content.authContinue;
+        document.getElementById("auth-email").disabled = !supabase;
+        document.getElementById("auth-password").disabled = !supabase;
+        termsCheckbox.disabled = !supabase;
+        document.getElementById("auth-submit").disabled = !supabase;
+        document.getElementById("auth-close").setAttribute("aria-label", content.authClose);
+        document.getElementById("auth-status").textContent =
+          authStatusText || (authStatusKey ? content[authStatusKey] : "");
+      }
+
+      function setSignedInState(signedIn) {
+        marketingContent.hidden = signedIn;
+        accountDashboard.hidden = !signedIn;
+        document.getElementById("login-button").hidden = signedIn;
+        document.getElementById("signup-button").hidden = signedIn;
+      }
 
       function renderLanguage() {
         const content = translations[language];
@@ -449,7 +1613,38 @@
         document.getElementById("question-label").textContent = content.questionLabel;
         questionInput.placeholder = content.placeholder;
         document.getElementById("ask-button").textContent = content.ask;
+        document.getElementById("login-button").textContent = content.login;
+        document.getElementById("signup-button").textContent = content.signup;
+        document.getElementById("why-title").textContent = content.whyTitle;
+        document.getElementById("why-intro").textContent = content.whyIntro;
+        content.benefits.forEach(([title, description], index) => {
+          document.getElementById(`benefit-${["privacy", "plans", "pricing"][index]}-title`).textContent = title;
+          document.getElementById(`benefit-${["privacy", "plans", "pricing"][index]}-text`).textContent = description;
+        });
+        document.getElementById("pricing-title").textContent = content.pricingTitle;
+        document.getElementById("pricing-intro").textContent = content.pricingIntro;
+        document.getElementById("billing-toggle").setAttribute("aria-label", content.billingLabel);
+        document.getElementById("monthly-button").textContent = content.monthly;
+        document.getElementById("yearly-button").textContent = content.yearly;
+        document.getElementById("monthly-button").setAttribute("aria-pressed", String(billingCycle === "monthly"));
+        document.getElementById("yearly-button").setAttribute("aria-pressed", String(billingCycle === "yearly"));
+        document.getElementById("plan-note").textContent = content.planNote;
+        document.getElementById("dashboard-title").textContent = content.dashboardTitle;
+        document.getElementById("subscriptions-title").textContent = content.subscriptionsTitle;
+        document.getElementById("profile-title").textContent = content.profileTitle;
+        document.getElementById("profile-name-label").textContent = content.fullName;
+        document.getElementById("profile-phone-label").textContent = content.phone;
+        document.getElementById("profile-email-label").textContent = content.accountEmail;
+        document.getElementById("profile-save").textContent = content.saveChanges;
+        document.getElementById("dashboard-signout").textContent = content.signOut;
+        document.getElementById("dashboard-status").textContent = currentUser
+          ? document.getElementById("dashboard-status").textContent || content.dashboardLoading
+          : "";
+        document.getElementById("dashboard-email").textContent = currentUser?.email || "";
         answer.textContent = content.answers[currentAnswer] || content[currentAnswer] || content.fallback;
+        renderPlans();
+        renderSubscriptions(currentSubscriptions);
+        renderAuth();
       }
 
       function showAnswer(answerKey) {
@@ -478,7 +1673,131 @@
         renderLanguage();
       });
 
+      document.getElementById("monthly-button").addEventListener("click", () => {
+        billingCycle = "monthly";
+        renderLanguage();
+      });
+
+      document.getElementById("yearly-button").addEventListener("click", () => {
+        billingCycle = "yearly";
+        renderLanguage();
+      });
+
+      document.getElementById("login-button").addEventListener("click", () => {
+        openAuth("login");
+      });
+
+      document.getElementById("signup-button").addEventListener("click", () => {
+        openAuth("signup");
+      });
+
+      document.getElementById("auth-close").addEventListener("click", () => {
+        authDialog.close();
+      });
+
+      authDialog.addEventListener("click", (event) => {
+        if (event.target === authDialog) authDialog.close();
+      });
+
+      authForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        authStatusKey = "";
+        authStatusText = "";
+        if (!supabase) {
+          authStatusKey = "authMissingConfig";
+          renderAuth();
+          return;
+        }
+
+        const submitButton = document.getElementById("auth-submit");
+        submitButton.disabled = true;
+        try {
+          const email = document.getElementById("auth-email").value.trim();
+          const password = document.getElementById("auth-password").value;
+          if (authMode === "signup") {
+            const { data, error } = await supabase.auth.signUp({
+              email,
+              password,
+              options: { data: { accepted_terms_at: new Date().toISOString() } },
+            });
+            if (error) throw error;
+            if (data.session?.user) {
+              authDialog.close();
+              await loadDashboard(data.session.user);
+              return;
+            }
+            authStatusKey = "authEmailConfirmation";
+          } else {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            authDialog.close();
+            await loadDashboard(data.user);
+            return;
+          }
+        } catch (error) {
+          authStatusText = `${translations[language].authErrorPrefix}${error.message || String(error)}`;
+        } finally {
+          submitButton.disabled = !supabase;
+        }
+        renderAuth();
+      });
+
+      function openAuth(mode, planId = "basic") {
+        authMode = mode;
+        selectedPlanId = planId;
+        authStatusKey = supabase ? "" : "authMissingConfig";
+        authStatusText = "";
+        authForm.reset();
+        renderAuth();
+        authDialog.showModal();
+      }
+
+      document.getElementById("profile-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!supabase || !currentUser) return;
+
+        const saveButton = document.getElementById("profile-save");
+        const status = document.getElementById("profile-status");
+        saveButton.disabled = true;
+        status.textContent = "";
+        try {
+          const { error } = await supabase
+            .from("profiles")
+            .update({
+              full_name: document.getElementById("profile-name").value.trim() || null,
+              phone: document.getElementById("profile-phone").value.trim() || null,
+            })
+            .eq("id", currentUser.id)
+            .select("id")
+            .single();
+          if (error) throw error;
+          status.textContent = translations[language].profileSaved;
+        } catch (error) {
+          status.textContent =
+            `${translations[language].profileSaveError}${error.message || String(error)}`;
+        } finally {
+          saveButton.disabled = false;
+        }
+      });
+
+      async function signOut() {
+        if (!supabase) return;
+        try {
+          const { error } = await supabase.auth.signOut();
+          if (error) throw error;
+          currentUser = null;
+          currentSubscriptions = [];
+          setSignedInState(false);
+          renderLanguage();
+        } catch (error) {
+          document.getElementById("dashboard-status").textContent =
+            `${translations[language].dashboardLoadError}${error.message || String(error)}`;
+        }
+      }
+
+      document.getElementById("dashboard-signout").addEventListener("click", signOut);
       renderLanguage();
+      restoreSession();
     </script>
   </body>
 </html>
