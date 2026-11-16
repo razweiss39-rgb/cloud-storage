@@ -25,6 +25,27 @@ supabase db push
 
 New Supabase Auth users receive a profile row and a free 2 GB subscription row.
 The profile form can update only the signed-in user's name and phone number.
+The file-storage migration also creates the private `user-files` bucket and
+restricts listing, uploads, and deletes to the signed-in user's UUID prefix.
+The page caps individual files at 2 GB and creates seven-day signed share links.
+
+## Configure NOWPayments links
+
+The pricing cards display a crypto checkout link only when its matching Vite
+variable is set to an HTTPS NOWPayments URL. Add the five hosted links from the
+NOWPayments dashboard to the deployment environment (or a local `.env.local`):
+
+```text
+VITE_NOWPAYMENTS_BASIC_URL=
+VITE_NOWPAYMENTS_POPULAR_URL=
+VITE_NOWPAYMENTS_CREATOR_URL=
+VITE_NOWPAYMENTS_PRO_1TB_URL=
+VITE_NOWPAYMENTS_ENTERPRISE_URL=
+```
+
+These are public checkout URLs, not API credentials. Payment confirmation and
+subscription updates still require a trusted server-side payment integration;
+opening a hosted payment link alone does not activate a subscription.
 
 ## Configure subscription sync
 
